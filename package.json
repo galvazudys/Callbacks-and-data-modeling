@@ -1,0 +1,25 @@
+{
+  "name": "callbacks_and_data_modeling",
+  "version": "1.0.0",
+  "description": "project to learn callbacks and data modeling",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galvazudys/Callbacks-and-data-modeling.git"
+  },
+  "keywords": [
+    "data"
+  ],
+  "author": "galvazudys",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/galvazudys/Callbacks-and-data-modeling/issues"
+  },
+  "homepage": "https://github.com/galvazudys/Callbacks-and-data-modeling#readme",
+  "dependencies": {
+    "faker": "^4.1.0"
+  }
+}
