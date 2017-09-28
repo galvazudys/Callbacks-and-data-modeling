@@ -25,12 +25,12 @@ var data_model_array = {
         }
       })
     ) {
-      const weHaveData = this.db.push({ name: new_object, id: id });
-      console.log(weHaveData);
+      new_object.id = id;
+      this.db.push(new_object);
       callBack({ message: "success" });
     } else {
       while (
-        db.find(x => {
+        this.db.find(x => {
           if (x.id === id) {
             return true;
           }
@@ -53,30 +53,49 @@ var data_model_array = {
       } else {
         reject();
       }
+    }).catch(err => {
+      return { message: err };
     });
     return promise;
   },
-  update(entry_id, new_value) {
+  update(entry_id, new_value, callback) {
     const userIndex = this.db.find((user, index) => {
       return user.id === entry_id ? index : null;
     });
-    this.db.splice(userIndex, 1, {
-      name: new_value,
-      id: entry_id
-    });
+    new_value.id = entry_id;
+    this.db.splice(userIndex, 1, new_value);
+    callback({ message: success, value: new_value });
   },
-  remove(entry_id) {
+  remove(entry_id, callback) {
     const userIndex = this.db.find((user, index) => {
       return user.id === entry_id ? index : null;
     });
-    this.db.splice(userIndex, 1);
+    const confirm = this.db.splice(userIndex, 1);
+    callback({ message: `user ${confirm[0]} have been removed` });
   }
 };
+
+data_model_array.remove("87be3db8-fc75-4996-aa49-8f94ed5f8d9a", x => {
+  console.log(x);
+});
+data_model_array.create(
+  {
+    user: { name: "stepas", userName: "skerdykas" },
+    email: "Lisandro40@gmail.com",
+    age: 51,
+    location: "Andorra",
+    hobies: "input",
+    image: "http://lorempixel.com/640/480"
+  },
+  e => {
+    console.log(data_model_array.db, e);
+  }
+);
 
 var data_model_object = {
   db: objDb,
 
-  create(new_Object) {
+  create(new_Object, callback) {
     let id = faker.random.uuid();
     for (let key in this.db) {
       while (key === id) {
@@ -84,9 +103,8 @@ var data_model_object = {
         return id;
       }
     }
-    this.db[id] = {
-      name: new_Object
-    };
+    this.db[id] = new_Object;
+    callback({ message: "success" });
   },
   read(entry_id) {
     const promise = new Promise((resolve, reject) => {
@@ -94,30 +112,37 @@ var data_model_object = {
       if (data) {
         resolve(data);
       } else {
-        reject();
+        reject({ message: "Error  occurred while injecting data" });
       }
+    }).catch(err => {
+      return { message: err };
     });
 
     return promise;
   },
-  update(entry_id, newValue) {
+  update(entry_id, newValue, callback) {
     if (this.db[entry_id]) {
-      this.db[entry_id] = {
-        name: newValue
-      };
+      this.db[entry_id] = newValue;
+      callback({ message: "success" });
     } else {
       throw new Error("this user do not exist");
     }
   },
-  remove(entry_id) {
+  remove(entry_id, callback) {
     if (this.db[entry_id]) {
       delete this.db[entry_id];
+      callback({ message: "success" });
     } else {
       throw new Error("this user do not exist");
     }
   }
 };
 
-
-
-data_model_array.read("87be3db8-fc75-4996-aa49-8f94ed5f8d9a").then((d)=>{console.log(d)});
+data_model_array
+  .read("87be3db8-fc75-4996-aa49-8f94ed5f8d9a")
+  .then(d => {
+    console.log(d);
+  })
+  .catch(err => {
+    console.log(err);
+  });
