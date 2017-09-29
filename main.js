@@ -1,27 +1,27 @@
-const data_model_arrayl = require("./model.js");
+const data_model_array = require("./arrayModel.js");
 const data_model_object = require("./objModel");
 const objDb = require("./objects_db");
-const user_schema = require('./schema/userSchema');
-const  validate = require('./validate');
-const obj = {
-    name: 'fkjhkewh',
-    userName: "fergeferf" ,
-    email: '27492347',
-    age: '',
-    location: "",
-    hobies: "parse",
-    imageUrl:'http://lorempixel.com/640/480'
-  }
+const array_db = require("./array_db");
+const user_schema = require("./schema/userSchema");
 
-validate(['dwedwed','dwwe','dww'],user_schema,(err,result)=>{
-  if(err){
-    console.log(err);
-  }else{
-    console.log(result)
-  }
-});
-// require schema
+data_model_array.setDb(array_db);
 
-// model.setschema
-// model.setDB
-// controller.setmodel
+data_model_object.setDb(objDb);
+data_model_object.setSchema(user_schema);
+
+
+
+function modelOfArray(name,schema) {
+  var new_obj = Object.create(data_model_array);
+  new_obj.name = name;
+  new_obj.setSchema(schema);
+  return new_obj;
+}
+function modelOfObj(name,schema) {
+  var new_obj = Object.create(data_model_object);
+  new_obj.name = name;
+  new_obj.setSchema(schema);
+  return new_obj;
+}
+const User_Obj = modelOfObj('user',user_schema);
+const User =new  modelOfArray('user', user_schema);

@@ -23,7 +23,8 @@ const user_schema = {
   },
   imageUrl: {
     type: String
-  }
+  },
+  extra_properties: true
 };
 
 module.exports = user_schema;

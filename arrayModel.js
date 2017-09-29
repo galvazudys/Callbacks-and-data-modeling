@@ -1,7 +1,19 @@
 const faker = require("faker");
 
-var data_model_object = {
-  db: {},
+// const fs = require('fs');
+// const newobj={};
+// db.forEach((item,index)=>{
+//   newobj[item.id] = item;
+// })
+
+// console.log(objDb);
+
+// fs.writeFile('./objects_db.js', JSON.stringify(newobj, null, 2) , 'utf-8',()=>{console.log('success')})
+
+// outputs: "Marks, Dean Sr."
+
+var data_model_array = {
+  db: [],
   schema: {},
   name:'',
   setSchema(schema) {
@@ -10,63 +22,81 @@ var data_model_object = {
   setDb(db) {
     this.db = db;
   },
-  readAll(callback) {
-    callback(null, this.db);
+  readAll(callback){
+    callback(null,this.db)
   },
-  create(new_Object, callback) {
-    this.validate(new_Object, this.schema, (error, result) => {
-      if (error) {
-        throw new Error(error.message);
-      } else {
+  create(new_object, callBack) {
+    this.validate(new_object,this.schema,(error,result)=>{
+      if(error){
+        throw new Error(error.message)
+      }else{
         let id = faker.random.uuid();
-        for (let key in this.db) {
-          while (key === id) {
+        if (
+          !this.db.find(x => {
+            if (x.id === id) {
+              return true;
+            }
+          })
+        ) {
+          result.id = id;
+          this.db.push(result);
+          callBack(null, { message: "success" });
+        } else {
+          while (
+            this.db.find(x => {
+              if (x.id === id) {
+                return true;
+              }
+            })
+          ) {
             id = faker.random.uuid();
             return id;
           }
+          this.db.push({ name: result, id: id });
+          callBack(null, { message: "success" });
         }
-        this.db[id] = result;
-        callback({ message: "success" });
       }
     });
+
   },
   read(entry_id) {
     const promise = new Promise((resolve, reject) => {
-      const data = this.db[entry_id];
+      const data = this.db.find(user => {
+        return user.id === entry_id;
+      });
       if (data) {
         resolve(data);
       } else {
-        reject({ message: "Error  occurred while injecting data" });
+        reject();
       }
     }).catch(err => {
       return { message: err };
     });
-
     return promise;
   },
-  update(entry_id, newValue, callback) {
-    this.validate(newValue, this.schema, (error, result) => {
-      if (error) {
-        throw new Error(error.message);
-      } else {
-        if (this.db[entry_id]) {
-          this.db[entry_id] = result;
-          callback({ message: "success" });
-        } else {
-          throw new Error("this user do not exist");
-        }
+  update(entry_id, new_value, callback) {
+    this.validate(new_value,this.schema,(error,result)=>{
+      if(error){
+        throw new Error(error.message)
+      }else{
+        const userIndex = this.db.find((user, index) => {
+          return user.id === entry_id ? index : null;
+        });
+        result.id = entry_id;
+        this.db.splice(userIndex, 1,result);
+        callback(null, { message: success, value: result });
       }
     });
+
   },
   remove(entry_id, callback) {
-    if (this.db[entry_id]) {
-      delete this.db[entry_id];
-      callback({ message: "success" });
-    } else {
-      throw new Error("this user do not exist");
-    }
+    const userIndex = this.db.find((user, index) => {
+      return user.id === entry_id ? index : null;
+    });
+    const confirm = this.db.splice(userIndex, 1);
+    callback(null, { message: `user have been removed`, object: confirm });
   },
-  validate: function(obj, schema, callback) {
+  validate:function(obj, schema, callback) {
     if (arguments.length == 3) {
       //check or all arguments are passed
       if (typeof obj === typeof schema && !Array.isArray(obj)) {
@@ -122,6 +152,7 @@ var data_model_object = {
       throw new Error("Need pass arguments obj and schema");
     }
   }
+
 };
 
-module.exports = data_model_object;
+module.exports = data_model_array;
