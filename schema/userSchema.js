@@ -21,7 +21,7 @@ const user_schema = {
   hobies: {
     type: String
   },
-  imageUrl: {
+  image: {
     type: String
   },
   extra_properties: true

@@ -3,7 +3,7 @@ const faker = require("faker");
 var data_model_object = {
   db: {},
   schema: {},
-  name:'',
+  name: "",
   setSchema(schema) {
     this.schema = schema;
   },

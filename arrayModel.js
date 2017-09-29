@@ -1,35 +1,23 @@
 const faker = require("faker");
 
-// const fs = require('fs');
-// const newobj={};
-// db.forEach((item,index)=>{
-//   newobj[item.id] = item;
-// })
-
-// console.log(objDb);
-
-// fs.writeFile('./objects_db.js', JSON.stringify(newobj, null, 2) , 'utf-8',()=>{console.log('success')})
-
-// outputs: "Marks, Dean Sr."
-
 var data_model_array = {
   db: [],
   schema: {},
-  name:'',
+  name: "",
   setSchema(schema) {
     this.schema = schema;
   },
   setDb(db) {
     this.db = db;
   },
-  readAll(callback){
-    callback(null,this.db)
+  readAll(callback) {
+    callback(null, this.db);
   },
   create(new_object, callBack) {
-    this.validate(new_object,this.schema,(error,result)=>{
-      if(error){
-        throw new Error(error.message)
-      }else{
+    this.validate(new_object, this.schema, (error, result) => {
+      if (error) {
+        throw new Error(error.message);
+      } else {
         let id = faker.random.uuid();
         if (
           !this.db.find(x => {
@@ -57,7 +45,6 @@ var data_model_array = {
         }
       }
     });
-
   },
   read(entry_id) {
     const promise = new Promise((resolve, reject) => {
@@ -75,19 +62,18 @@ var data_model_array = {
     return promise;
   },
   update(entry_id, new_value, callback) {
-    this.validate(new_value,this.schema,(error,result)=>{
-      if(error){
-        throw new Error(error.message)
-      }else{
+    this.validate(new_value, this.schema, (error, result) => {
+      if (error) {
+        throw new Error(error.message);
+      } else {
         const userIndex = this.db.find((user, index) => {
           return user.id === entry_id ? index : null;
         });
         result.id = entry_id;
-        this.db.splice(userIndex, 1,result);
+        this.db.splice(userIndex, 1, result);
         callback(null, { message: success, value: result });
       }
     });
-
   },
   remove(entry_id, callback) {
     const userIndex = this.db.find((user, index) => {
@@ -96,7 +82,7 @@ var data_model_array = {
     const confirm = this.db.splice(userIndex, 1);
     callback(null, { message: `user have been removed`, object: confirm });
   },
-  validate:function(obj, schema, callback) {
+  validate: function(obj, schema, callback) {
     if (arguments.length == 3) {
       //check or all arguments are passed
       if (typeof obj === typeof schema && !Array.isArray(obj)) {
@@ -151,8 +137,18 @@ var data_model_array = {
     } else {
       throw new Error("Need pass arguments obj and schema");
     }
+  },
+  search(name, callback) {
+    let matches = this.db.filter(item => {
+      return Object.keys(item).some(key => {
+        let value = JSON.stringify(item[key])
+          .toLowerCase()
+          .includes(name.toLowerCase());
+        return value;
+      });
+    });
+    callback(null, matches);
   }
-
 };
 
 module.exports = data_model_array;
