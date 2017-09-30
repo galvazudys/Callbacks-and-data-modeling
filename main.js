@@ -10,22 +10,18 @@ data_model_object.setDb(objDb);
 data_model_object.setSchema(user_schema);
 
 function modelOfArray(name, schema) {
-  var new_obj = Object.create(data_model_array);
+  const new_obj = Object.create(data_model_array);
   new_obj.name = name;
   new_obj.setSchema(schema);
   return new_obj;
 }
 
 function modelOfObj(name, schema) {
-  var new_obj = Object.create(data_model_object);
+  const new_obj = Object.create(data_model_object);
   new_obj.name = name;
   new_obj.setSchema(schema);
   return new_obj;
 }
 
 const User_Obj = modelOfObj('user', user_schema);
-const User = new modelOfArray('user', user_schema);
-
-User.search('age', (error, result) => {
-  console.log(result);
-});
+const User = modelOfArray('user', user_schema);

@@ -1,9 +1,9 @@
-const faker = require("faker");
+const faker = require('faker');
 
 var data_model_object = {
   db: {},
   schema: {},
-  name: "",
+  name: '',
   setSchema(schema) {
     this.schema = schema;
   },
@@ -26,7 +26,7 @@ var data_model_object = {
           }
         }
         this.db[id] = result;
-        callback({ message: "success" });
+        callback({ message: 'success' });
       }
     });
   },
@@ -36,7 +36,7 @@ var data_model_object = {
       if (data) {
         resolve(data);
       } else {
-        reject({ message: "Error  occurred while injecting data" });
+        reject({ message: 'Error  occurred while injecting data' });
       }
     }).catch(err => {
       return { message: err };
@@ -51,9 +51,9 @@ var data_model_object = {
       } else {
         if (this.db[entry_id]) {
           this.db[entry_id] = result;
-          callback({ message: "success" });
+          callback({ message: 'success' });
         } else {
-          throw new Error("this user do not exist");
+          throw new Error('this user do not exist');
         }
       }
     });
@@ -61,9 +61,9 @@ var data_model_object = {
   remove(entry_id, callback) {
     if (this.db[entry_id]) {
       delete this.db[entry_id];
-      callback({ message: "success" });
+      callback({ message: 'success' });
     } else {
-      throw new Error("this user do not exist");
+      throw new Error('this user do not exist');
     }
   },
   validate: function(obj, schema, callback) {
@@ -79,14 +79,14 @@ var data_model_object = {
         ) {
           return callback(
             {
-              message: "Invalid obj,extra properties not allow in schema."
+              message: 'Invalid obj,extra properties not allow in schema.'
             },
             null
           );
         }
         for (let key in schema) {
-          if (key !== "extra_properties") {
-            if (obj[key] === "" && schema[key].required) {
+          if (key !== 'extra_properties') {
+            if (obj[key] === '' && schema[key].required) {
               return callback(
                 {
                   message: `${key} field is required`
@@ -113,14 +113,31 @@ var data_model_object = {
       } else {
         callback(
           {
-            message: "Have to be object passed as argument"
+            message: 'Have to be object passed as argument'
           },
           null
         );
       }
     } else {
-      throw new Error("Need pass arguments obj and schema");
+      throw new Error('Need pass arguments obj and schema');
     }
+  },
+  search(searchTerm, callback) {
+    let results = [];
+    for (var key in this.db) {
+      if (this.db.hasOwnProperty(key)) {
+        const element = this.db[key];
+        for (var i in element) {
+          let result = JSON.stringify(element[i])
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+          if (result) {
+            results.push(this.db[key]);
+          }
+        }
+      }
+    }
+    callback(null, results);
   }
 };
 
