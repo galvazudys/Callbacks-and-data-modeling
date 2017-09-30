@@ -1,8 +1,8 @@
-const data_model_array = require("./arrayModel.js");
-const data_model_object = require("./objModel");
-const objDb = require("./objects_db");
-const array_db = require("./array_db");
-const user_schema = require("./schema/userSchema");
+const data_model_array = require('./arrayModel.js');
+const data_model_object = require('./objModel');
+const objDb = require('./objects_db');
+const array_db = require('./array_db');
+const user_schema = require('./schema/userSchema');
 
 data_model_array.setDb(array_db);
 
@@ -23,8 +23,9 @@ function modelOfObj(name, schema) {
   return new_obj;
 }
 
-const User_Obj = modelOfObj("user", user_schema);
-const User = new modelOfArray("user", user_schema);
+const User_Obj = modelOfObj('user', user_schema);
+const User = new modelOfArray('user', user_schema);
 
-
-User.search('age',(error,result)=>{console.log(result)})
+User.search('age', (error, result) => {
+  console.log(result);
+});
