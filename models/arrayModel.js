@@ -1,9 +1,9 @@
-const faker = require("faker");
+const faker = require('faker');
 
 var data_model_array = {
   db: [],
   schema: {},
-  name: "",
+  name: '',
   setSchema(schema) {
     this.schema = schema;
   },
@@ -28,7 +28,7 @@ var data_model_array = {
         ) {
           result.id = id;
           this.db.push(result);
-          callBack(null, { message: "success" });
+          callBack(null, { message: 'success' });
         } else {
           while (
             this.db.find(x => {
@@ -41,7 +41,7 @@ var data_model_array = {
             return id;
           }
           this.db.push({ name: result, id: id });
-          callBack(null, { message: "success" });
+          callBack(null, { message: 'success' });
         }
       }
     });
@@ -95,14 +95,14 @@ var data_model_array = {
         ) {
           return callback(
             {
-              message: "Invalid obj,extra properties not allow in schema."
+              message: 'Invalid obj,extra properties not allow in schema.'
             },
             null
           );
         }
         for (let key in schema) {
-          if (key !== "extra_properties") {
-            if (obj[key] === "" && schema[key].required) {
+          if (key !== 'extra_properties') {
+            if (obj[key] === '' && schema[key].required) {
               return callback(
                 {
                   message: `${key} field is required`
@@ -129,13 +129,13 @@ var data_model_array = {
       } else {
         callback(
           {
-            message: "Have to be object passed as argument"
+            message: 'Have to be object passed as argument'
           },
           null
         );
       }
     } else {
-      throw new Error("Need pass arguments obj and schema");
+      throw new Error('Need pass arguments obj and schema');
     }
   },
   search(name, callback) {
