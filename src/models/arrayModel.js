@@ -38,7 +38,6 @@ var data_model_array = {
             })
           ) {
             id = faker.random.uuid();
-            return id;
           }
           this.db.push({ name: result, id: id });
           callBack(null, { message: 'success' });
@@ -93,7 +92,7 @@ var data_model_array = {
           schema.extra_properties === false &&
           Object.keys(obj).length !== Object.keys(schema).length - 1
         ) {
-          return callback(
+          callback(
             {
               message: 'Invalid obj,extra properties not allow in schema.'
             },
@@ -103,7 +102,7 @@ var data_model_array = {
         for (let key in schema) {
           if (key !== 'extra_properties') {
             if (obj[key] === '' && schema[key].required) {
-              return callback(
+               callback(
                 {
                   message: `${key} field is required`
                 },
@@ -111,7 +110,7 @@ var data_model_array = {
               );
             }
             if (typeof schema[key].type() !== typeof obj[key]) {
-              return callback(
+               callback(
                 {
                   message: `incorrect value type ${key.type},expected ${schema[
                     key
@@ -125,7 +124,7 @@ var data_model_array = {
             }
           }
         }
-        return callback(null, obj);
+         callback(null, obj);
       } else {
         callback(
           {
